@@ -1,3 +1,4 @@
+```md
 # Som Energia Price Fetcher
 
 This Python script fetches indexed electricity prices from the Som Energia API, processes the data, and stores it in a CSV file. It combines the newly fetched data with the previous day's data to ensure continuity and accuracy.
@@ -11,6 +12,7 @@ This Python script fetches indexed electricity prices from the Som Energia API, 
 - [Installation](#installation)
 - [Running the Script](#running-the-script)
 - [Running as a Service](#running-as-a-service)
+- [Running the Script Daily at 11:55 AM](#running-the-script-daily-at-1155-am)
 - [Configuration](#configuration)
 - [Logging](#logging)
 - [Contributing](#contributing)
@@ -89,7 +91,7 @@ After=network.target
 [Service]
 ExecStart=/usr/bin/python3 /opt/somenergia/your_script.py
 WorkingDirectory=/opt/somenergia
-Restart=always
+Restart=on-failure
 User=root
 StandardOutput=append:/var/log/somenergia.log
 StandardError=append:/var/log/somenergia_error.log
@@ -102,6 +104,47 @@ WantedBy=multi-user.target
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable somenergia.service
+sudo systemctl start somenergia.service
+```
+
+---
+
+## Running the Script Daily at 11:55 AM
+To schedule the script to run every day at **11:55 AM**, set up a `systemd` timer.
+
+### 1. Create a Timer File
+```bash
+sudo nano /etc/systemd/system/somenergia.timer
+```
+
+### 2. Add the Following Content:
+```ini
+[Unit]
+Description=Timer to run Som Energia Price Fetcher daily at 11:55 AM
+
+[Timer]
+OnCalendar=*-*-* 11:55:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+
+### 3. Enable and Start the Timer:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable somenergia.timer
+sudo systemctl start somenergia.timer
+```
+
+### 4. Verify the Timer is Active:
+```bash
+sudo systemctl list-timers
+```
+
+### Testing the Timer:
+To manually trigger the service for testing without waiting for the timer:
+```bash
 sudo systemctl start somenergia.service
 ```
 
@@ -137,16 +180,3 @@ Feel free to fork this repository and submit pull requests with improvements or 
 ## License
 This project is licensed under the MIT License.
 ```
-
----
-
-### How to Use:
-1. Copy the content above.
-2. Create a new file in your project directory:
-   ```bash
-   nano README.md
-   ```
-3. Paste the content and save the file:
-   ```bash
-   Ctrl + O, Enter, Ctrl + X
-   ```
