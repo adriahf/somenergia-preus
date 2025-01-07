@@ -77,7 +77,7 @@ def main():
     """
     # Build filename for yesterday's CSV
     yesterday_date_str = (get_current_time_in_barcelona() - timedelta(days=1)).strftime('%Y-%m-%d')
-    filename_read = f"prices_somenergia_{yesterday_date_str}.csv"
+    filename_read = f"data/prices_somenergia_{yesterday_date_str}.csv"
 
     try:
         df_read = pd.read_csv(filename_read)
@@ -113,7 +113,7 @@ def main():
 
     # Build filename for today's CSV
     today_date_str = get_current_time_in_barcelona().strftime('%Y-%m-%d')
-    filename_write = f"prices_somenergia_{today_date_str}.csv"
+    filename_write = f"data/prices_somenergia_{today_date_str}.csv"
 
     # Save combined DataFrame to CSV
     df_combined.to_csv(filename_write, index=False)

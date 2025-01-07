@@ -1,4 +1,3 @@
-```md
 # Som Energia Price Fetcher
 
 This Python script fetches indexed electricity prices from the Som Energia API, processes the data, and stores it in a CSV file. It combines the newly fetched data with the previous day's data to ensure continuity and accuracy.
